@@ -8,7 +8,7 @@ public interface DeviceService {
 
     Device saveEntity(Device sample);
 
-    Optional<Device> getEntity(String id);
+    Optional<Device> getEntity(Long id);
 
-    void deleteEntity(String id);
+    void deleteEntity(Long id);
 }

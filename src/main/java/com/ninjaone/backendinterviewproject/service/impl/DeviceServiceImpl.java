@@ -21,12 +21,12 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Optional<Device> getEntity(String id){
+    public Optional<Device> getEntity(Long id){
         return deviceRepository.findById(id);
     }
 
     @Override
-    public void deleteEntity(String id) {
+    public void deleteEntity(Long id) {
         deviceRepository.deleteById(id);
     }
 }

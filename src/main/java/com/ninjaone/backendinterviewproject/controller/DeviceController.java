@@ -19,12 +19,12 @@ public class DeviceController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    private void deleteServiceEntity(@PathVariable String id) {
+    private void deleteServiceEntity(@PathVariable Long id) {
         deviceService.deleteEntity(id);
     }
 
     @GetMapping("/{id}")
-    private Device getDeviceEntity(@PathVariable String id) {
+    private Device getDeviceEntity(@PathVariable Long id) {
         return deviceService.getEntity(id)
                 .orElseThrow();
     }

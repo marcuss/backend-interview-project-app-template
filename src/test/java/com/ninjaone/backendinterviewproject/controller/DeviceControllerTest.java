@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @AutoConfigureDataJpa
 public class DeviceControllerTest {
-    public static final String ID = "12345";
+    public static final Long ID = 12345L;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired

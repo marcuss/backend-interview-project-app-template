@@ -1,29 +1,33 @@
 package com.ninjaone.backendinterviewproject.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Device {
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String systemName;
     private String deviceType;
 
     public Device() {
     }
 
-    public Device(String id, String systemName, String deviceType) {
+    public Device(Long id, String systemName, String deviceType) {
         this.id = id;
         this.systemName = systemName;
         this.deviceType = deviceType;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

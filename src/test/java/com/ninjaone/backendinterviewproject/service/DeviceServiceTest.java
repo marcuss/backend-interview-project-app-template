@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DeviceServiceTest {
-    public static final String ID = "12345";
+    public static final Long ID = 12345L;
 
     @Mock
     private DeviceRepository repository;
