@@ -41,6 +41,12 @@ public class ServiceResource {
                     HttpStatus.BAD_REQUEST
             );
         }
+        if (service.findByServiceName(entity.getServiceName()).isPresent()){
+            return new ResponseEntity<>(
+                    new BaseResponse<>("Error creating entity: can not be duplicated", entity),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
         try {
             return new ResponseEntity<>(
                     new BaseResponse<>("Success.", service.save(entity)),

@@ -28,7 +28,7 @@ public class Service implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "service_name")
+    @Column(name = "service_name", unique = true)
     private String serviceName;
 
     @OneToMany(mappedBy = "service")

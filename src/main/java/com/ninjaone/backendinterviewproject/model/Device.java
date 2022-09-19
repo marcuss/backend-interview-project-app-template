@@ -28,7 +28,7 @@ public class Device implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "system_name")
+    @Column(name = "system_name", unique = true)
     private String systemName;
 
     @Column(name = "customer")

@@ -41,7 +41,13 @@ public class DeviceResource {
     private ResponseEntity<BaseResponse<Device>> create(@RequestBody Device entity) {
         if (entity.getId() != null) {
             return new ResponseEntity<>(
-                    new BaseResponse<>("Error creating device: Id must be null", entity),
+                    new BaseResponse<>("Error creating entity: Id must be null", entity),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+        if (service.findBySystemName(entity.getSystemName()).isPresent()){
+            return new ResponseEntity<>(
+                    new BaseResponse<>("Error creating entity: can not be duplicated", entity),
                     HttpStatus.BAD_REQUEST
             );
         }

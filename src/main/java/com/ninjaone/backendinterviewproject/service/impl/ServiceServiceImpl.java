@@ -39,6 +39,11 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public Optional<Service> findByServiceName(String serviceName) {
+        return serviceRepository.findByServiceName(serviceName);
+    }
+
+    @Override
     public void delete(Long id) {
         serviceRepository.deleteById(id);
     }

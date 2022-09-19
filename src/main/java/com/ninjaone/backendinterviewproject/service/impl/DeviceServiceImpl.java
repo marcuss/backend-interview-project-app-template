@@ -28,23 +28,6 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Optional<Device> partialUpdate(Device device) {
-        return deviceRepository
-                .findById(device.getId())
-                .map(existingDevice -> {
-                    if (device.getSystemName() != null) {
-                        existingDevice.setSystemName(device.getSystemName());
-                    }
-                    if (device.getCustomer() != null) {
-                        existingDevice.setCustomer(device.getCustomer());
-                    }
-
-                    return existingDevice;
-                })
-                .map(deviceRepository::save);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public List<Device> findAll() {
         return deviceRepository.findAll();
@@ -54,6 +37,12 @@ public class DeviceServiceImpl implements DeviceService {
     @Transactional(readOnly = true)
     public Optional<Device> findOne(Long id) {
         return deviceRepository.findById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Device> findBySystemName(String systemName) {
+        return deviceRepository.findBySystemName(systemName);
     }
 
     @Override

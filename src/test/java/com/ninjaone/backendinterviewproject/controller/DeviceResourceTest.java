@@ -120,7 +120,7 @@ public class DeviceResourceTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(entityAsString))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message", is("Error creating device: Id must be null")));
+                .andExpect(jsonPath("$.message", is("Error creating entity: Id must be null")));
     }
 
     @Test

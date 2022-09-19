@@ -27,7 +27,7 @@ public class DeviceType implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "type_name")
+    @Column(name = "type_name", unique = true)
     private String typeName;
 
     @OneToMany(mappedBy = "type")

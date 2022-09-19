@@ -33,6 +33,14 @@ public interface ServiceService {
     Optional<Service> findOne(Long id);
 
     /**
+     * Get the service by its serviceName.
+     *
+     * @param serviceName the serviceName of the entity.
+     * @return the entity.
+     */
+    Optional<Service> findByServiceName(String serviceName);
+
+    /**
      * Delete the "id" service.
      *
      * @param id the id of the entity.

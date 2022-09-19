@@ -18,14 +18,6 @@ public interface DeviceService {
     Device save(Device device);
 
     /**
-     * Partially updates a device.
-     *
-     * @param device the entity to update partially.
-     * @return the persisted entity.
-     */
-    Optional<Device> partialUpdate(Device device);
-
-    /**
      * Get all the devices.
      *
      * @return the list of entities.
@@ -48,4 +40,12 @@ public interface DeviceService {
     void delete(Long id);
 
     boolean existsById(Long id);
+
+    /**
+     * Get the device by systemName.
+     *
+     * @param systemName the systemName of the entity.
+     * @return the entity.
+     */
+    Optional<Device> findBySystemName(String systemName);
 }
