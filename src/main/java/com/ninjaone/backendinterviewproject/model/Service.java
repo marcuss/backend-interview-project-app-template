@@ -31,14 +31,6 @@ public class Service implements Serializable {
     @Column(name = "service_name", unique = true)
     private String serviceName;
 
-    @OneToMany(mappedBy = "service")
-    @JsonIgnoreProperties(value = { "service", "deviceType" }, allowSetters = true)
-    private Set<ServiceCost> serviceCosts = new HashSet<>();
-
-    @OneToMany(mappedBy = "service")
-    @JsonIgnoreProperties(value = { "service", "device" }, allowSetters = true)
-    private Set<ServicesByDevices> customerServices = new HashSet<>();
-
     public Long getId() {
         return this.id;
     }
@@ -63,68 +55,6 @@ public class Service implements Serializable {
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
-    }
-
-    public Set<ServiceCost> getServiceCosts() {
-        return this.serviceCosts;
-    }
-
-    public void setServiceCosts(Set<ServiceCost> serviceCosts) {
-        if (this.serviceCosts != null) {
-            this.serviceCosts.forEach(i -> i.setService(null));
-        }
-        if (serviceCosts != null) {
-            serviceCosts.forEach(i -> i.setService(this));
-        }
-        this.serviceCosts = serviceCosts;
-    }
-
-    public Service serviceCosts(Set<ServiceCost> serviceCosts) {
-        this.setServiceCosts(serviceCosts);
-        return this;
-    }
-
-    public Service addServiceCosts(ServiceCost serviceCost) {
-        this.serviceCosts.add(serviceCost);
-        serviceCost.setService(this);
-        return this;
-    }
-
-    public Service removeServiceCosts(ServiceCost serviceCost) {
-        this.serviceCosts.remove(serviceCost);
-        serviceCost.setService(null);
-        return this;
-    }
-
-    public Set<ServicesByDevices> getCustomerServices() {
-        return this.customerServices;
-    }
-
-    public void setCustomerServices(Set<ServicesByDevices> servicesByDevices) {
-        if (this.customerServices != null) {
-            this.customerServices.forEach(i -> i.setService(null));
-        }
-        if (servicesByDevices != null) {
-            servicesByDevices.forEach(i -> i.setService(this));
-        }
-        this.customerServices = servicesByDevices;
-    }
-
-    public Service customerServices(Set<ServicesByDevices> servicesByDevices) {
-        this.setCustomerServices(servicesByDevices);
-        return this;
-    }
-
-    public Service addCustomerService(ServicesByDevices servicesByDevices) {
-        this.customerServices.add(servicesByDevices);
-        servicesByDevices.setService(this);
-        return this;
-    }
-
-    public Service removeCustomerService(ServicesByDevices servicesByDevices) {
-        this.customerServices.remove(servicesByDevices);
-        servicesByDevices.setService(null);
-        return this;
     }
 
     @Override

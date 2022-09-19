@@ -5,7 +5,7 @@
 - Full api rest calls collection can be found inside `test/resources` as compatible Insomia App json file
 
 ### TODOs:
-- Optimize persistence classes, removing unused relationship mappings.
+- ~~Optimize persistence classes, removing unused relationship mappings.~~
 - Refactor duplicate code for generic multipurpose code
 - Add proper logging (Maybe by aspects?)
 - Update spring-boot to latest

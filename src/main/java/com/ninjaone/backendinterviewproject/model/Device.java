@@ -18,7 +18,6 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(value = {"customerDevices"})
 public class Device implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,9 +36,6 @@ public class Device implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = { "ids", "id", "deviceTypeCosts" }, allowSetters = true)
     private DeviceType type;
-
-    @OneToMany(mappedBy = "device")
-    private Set<ServicesByDevices> customerDevices = new HashSet<>();
 
     public Long getId() {
         return this.id;
@@ -90,37 +86,6 @@ public class Device implements Serializable {
 
     public Device type(DeviceType deviceType) {
         this.setType(deviceType);
-        return this;
-    }
-
-    public Set<ServicesByDevices> getCustomerDevices() {
-        return this.customerDevices;
-    }
-
-    public void setCustomerDevices(Set<ServicesByDevices> servicesByDevices) {
-        if (this.customerDevices != null) {
-            this.customerDevices.forEach(i -> i.setDevice(null));
-        }
-        if (servicesByDevices != null) {
-            servicesByDevices.forEach(i -> i.setDevice(this));
-        }
-        this.customerDevices = servicesByDevices;
-    }
-
-    public Device customerDevices(Set<ServicesByDevices> servicesByDevices) {
-        this.setCustomerDevices(servicesByDevices);
-        return this;
-    }
-
-    public Device addCustomerDevice(ServicesByDevices servicesByDevices) {
-        this.customerDevices.add(servicesByDevices);
-        servicesByDevices.setDevice(this);
-        return this;
-    }
-
-    public Device removeCustomerDevice(ServicesByDevices servicesByDevices) {
-        this.customerDevices.remove(servicesByDevices);
-        servicesByDevices.setDevice(null);
         return this;
     }
 
