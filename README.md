@@ -1,3 +1,16 @@
+# Marcus' Comments:
+
+### Resources for evaluators
+- Most important documentation resides in *Resource classes
+- Full api rest calls collection can be found inside `test/resources` as compatible Insomia App json file
+
+### TODOs:
+- Optimize persistence classes, removing unused relationship mappings.
+- Refactor duplicate code for generic multipurpose code
+- Add proper logging (Maybe by aspects?)
+- Update spring-boot to latest
+
+
 # NinjaOne Backend Interview Project
 
 The project is configured to use an in-memory H2 database that is volatile. If you wish to make it maintain data on application shut down, you can change the spring.database.jdbc-url to point at a file like `jdbc:h2:file:/{your file path here}`

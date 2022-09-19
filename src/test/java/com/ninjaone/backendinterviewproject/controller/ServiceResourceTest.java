@@ -2,8 +2,9 @@ package com.ninjaone.backendinterviewproject.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ninjaone.backendinterviewproject.BackendInterviewProjectApplication;
-import com.ninjaone.backendinterviewproject.model.Device;
-import com.ninjaone.backendinterviewproject.service.DeviceService;
+import com.ninjaone.backendinterviewproject.database.ServiceRepository;
+import com.ninjaone.backendinterviewproject.model.Service;
+import com.ninjaone.backendinterviewproject.service.ServiceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,51 +21,57 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static com.ninjaone.backendinterviewproject.controller.DeviceController.REQUEST_URL;
+import static com.ninjaone.backendinterviewproject.controller.ServiceResource.REQUEST_URL;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {BackendInterviewProjectApplication.class})
-@WebMvcTest(DeviceController.class)
+@WebMvcTest(ServiceResource.class)
 @AutoConfigureMockMvc
 @AutoConfigureDataJpa
-public class DeviceControllerTest {
+public class ServiceResourceTest {
     public static final Long ID = 12345L;
-    @Autowired
-    ObjectMapper objectMapper;
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
-    private DeviceService service;
+    private final ObjectMapper objectMapper;
+    private final MockMvc mockMvc;
 
-    private Device testEntity;
+    private final ServiceRepository repository;
+
+    @MockBean
+    private ServiceService service;
+
+    private Service testEntity;
+
+    @Autowired
+    public ServiceResourceTest(ObjectMapper objectMapper,
+                               MockMvc mockMvc,
+                               ServiceRepository repository,
+                               ServiceService serviceService) {
+        this.objectMapper = objectMapper;
+        this.mockMvc = mockMvc;
+        this.repository = repository;
+        this.service = serviceService;
+    }
 
     @BeforeEach
     void setup() {
-        testEntity = new Device(ID, "device", "machine");
+        testEntity = Service.builder().id(ID).serviceName("machine").build();
     }
 
     @Test
     void getEntity() throws Exception {
-        when(service.getEntity(ID)).thenReturn(Optional.of(testEntity));
+        when(service.findOne(ID)).thenReturn(Optional.of(testEntity));
 
         mockMvc.perform(get(REQUEST_URL + ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.data.systemName", is("device")));
+                .andExpect(jsonPath("$.data.serviceName", is("machine")));
 
         verify(service, VerificationModeFactory.times(1))
-                .getEntity(ID);
+                .findOne(ID);
     }
 
     @Test
@@ -72,54 +79,40 @@ public class DeviceControllerTest {
         mockMvc.perform(get(REQUEST_URL + 999L))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", is("Device Not Found")));
+                .andExpect(jsonPath("$.message", is("Entity Not Found")));
 
         verify(service, VerificationModeFactory.times(1))
-                .getEntity(999L);
+                .findOne(999L);
     }
 
     @Test
     void createEntity() throws Exception {
-        when(service.saveEntity(any())).thenReturn(testEntity);
+        when(service.save(any())).thenReturn(testEntity);
         testEntity.setId(null);
         String entityAsString = objectMapper.writeValueAsString(testEntity);
         mockMvc.perform(post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(entityAsString))
                 .andExpect(status().isCreated())
-               // .andExpect(content().string(entityAsString));// does not work on autogenerated ids
-                .andExpect(jsonPath("$.data.deviceType", is("machine")))
-                .andExpect(jsonPath("$.data.systemName", is("device")));
+                .andExpect(jsonPath("$.data.serviceName", is("machine")));
     }
 
     @Test
     void createEntity_failsOnProvidedId() throws Exception {
-        when(service.saveEntity(any())).thenReturn(testEntity);
+        when(service.save(any())).thenReturn(testEntity);
         String entityAsString = objectMapper.writeValueAsString(testEntity);
         mockMvc.perform(post(REQUEST_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(entityAsString))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message", is("Error creating device")));
-    }
-
-    @Test
-    void createEntity_failsOnNonProvidedData() throws Exception {
-        when(service.saveEntity(any())).thenReturn(testEntity);
-        testEntity.setDeviceType(null);
-        String entityAsString = objectMapper.writeValueAsString(testEntity);
-        mockMvc.perform(post(REQUEST_URL)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(entityAsString))
-                .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.message", is("Error creating device")));
+                .andExpect(jsonPath("$.message", is("Error creating entity: Id must be null")));
     }
 
     @Test
     void deleteEntity() throws Exception {
-        doNothing().when(service).deleteEntity(ID);
-
+        when(service.findOne(any())).thenReturn(Optional.of(testEntity));
+        doNothing().when(service).delete(ID);
         mockMvc.perform(delete(REQUEST_URL + ID))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
     }
 }

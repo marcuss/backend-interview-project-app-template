@@ -2,6 +2,7 @@ package com.ninjaone.backendinterviewproject.service;
 
 import com.ninjaone.backendinterviewproject.database.DeviceRepository;
 import com.ninjaone.backendinterviewproject.model.Device;
+import com.ninjaone.backendinterviewproject.model.DeviceType;
 import com.ninjaone.backendinterviewproject.service.impl.DeviceServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,29 +34,31 @@ public class DeviceServiceTest {
 
     @BeforeEach
     void setup() {
-        testEntity = new Device(ID, "device", "machine");
+        testEntity = Device.builder().id(ID).systemName("machine")
+                .type(DeviceType.builder().typeName("MAC").build())
+                .build();
     }
 
     @Test
     void getEntityFromService() {
         when(repository.findById(ID)).thenReturn(Optional.of(testEntity));
-        Optional<Device> entityOpt = service.getEntity(ID);
+        Optional<Device> entityOpt = service.findOne(ID);
         assertTrue(entityOpt.isPresent());
         assertEquals(testEntity.getId(), entityOpt.get().getId());
-        assertEquals(testEntity.getDeviceType(), entityOpt.get().getDeviceType());
+        assertEquals(testEntity.getType(), entityOpt.get().getType());
         assertEquals(testEntity.getSystemName(), entityOpt.get().getSystemName());
     }
 
     @Test
     void saveEntityThruService() {
         when(repository.save(testEntity)).thenReturn(testEntity);
-        assertEquals(testEntity, service.saveEntity(testEntity));
+        assertEquals(testEntity, service.save(testEntity));
     }
 
     @Test
     void deleteEntityThruService() {
         doNothing().when(repository).deleteById(ID);
-        service.deleteEntity(ID);
+        service.delete(ID);
         Mockito.verify(repository, times(1)).deleteById(ID);
     }
 }
